@@ -1,0 +1,58 @@
+# Dependencies
+node_modules
+
+# Claude Code
+.claude
+
+# Build output
+dist
+dist-ssr
+build
+
+# Environment variables
+.env
+.env.*
+*.local
+
+# Secrets / credentials
+*.pem
+*.key
+*.cert
+*.p12
+*.pfx
+credentials.json
+secrets.json
+serviceAccountKey.json
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Cache / coverage
+.cache
+.eslintcache
+coverage
+*.lcov
+*.tsbuildinfo
