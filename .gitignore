@@ -1,3 +1,7 @@
+# Root config (not part of app)
+/package.json
+/package-lock.json
+
 # Dependencies
 node_modules
 
