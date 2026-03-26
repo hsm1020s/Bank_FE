@@ -1,25 +1,24 @@
+import { useState, useEffect } from 'react';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
-import { dashboardStats, monthlyData, accountTypeData, recentTransactions } from '../data/mockData';
+import { fetchStats, fetchMonthly, fetchAccountTypes, fetchTransactions } from '../api/bankApi';
+import { formatKRW, formatAmount } from '../utils/format';
+import { StatCards } from '../components/StatCard';
+import Card from '../components/Card';
+import DataTable from '../components/DataTable';
+import { StatusBadge, TypeBadge } from '../components/Badge';
+import TransactionDetail from '../components/modals/TransactionDetail';
 
-function formatKRW(num) {
-  if (num >= 1_000_000_000_000) return `${(num / 1_000_000_000_000).toFixed(1)}조`;
-  if (num >= 100_000_000) return `${(num / 100_000_000).toFixed(0)}억`;
-  if (num >= 10_000) return `${(num / 10_000).toFixed(0)}만`;
-  return num.toLocaleString();
-}
-
-function formatAmount(num) {
-  return num.toLocaleString('ko-KR') + '원';
-}
-
-const statCards = [
-  { label: '총 수신액', value: dashboardStats.totalDeposits, growth: dashboardStats.depositGrowth, color: '#6366f1', icon: '↗' },
-  { label: '총 여신액', value: dashboardStats.totalLoans, growth: dashboardStats.loanGrowth, color: '#8b5cf6', icon: '↗' },
-  { label: '총 고객수', value: dashboardStats.totalCustomers, growth: dashboardStats.customerGrowth, color: '#06b6d4', icon: '↗', isCount: true },
-  { label: '월간 수익', value: dashboardStats.monthlyRevenue, growth: dashboardStats.revenueGrowth, color: '#f59e0b', icon: '↗' },
+const columns = [
+  { key: 'id', label: '거래번호', className: 'mono' },
+  { key: 'customer', label: '고객명', className: 'bold' },
+  { key: 'type', label: '구분', render: (v) => <TypeBadge type={v} /> },
+  { key: 'account', label: '계좌번호', className: 'mono' },
+  { key: 'amount', label: '금액', className: 'amount', render: (v) => formatAmount(v) },
+  { key: 'date', label: '일시', className: 'muted' },
+  { key: 'status', label: '상태', render: (v) => <StatusBadge status={v} /> },
 ];
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -37,37 +36,33 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function Dashboard() {
+  const [stats, setStats] = useState({});
+  const [monthlyData, setMonthlyData] = useState([]);
+  const [accountTypeData, setAccountTypeData] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+  const [selectedTx, setSelectedTx] = useState(null);
+
+  useEffect(() => {
+    fetchStats().then(setStats);
+    fetchMonthly().then(setMonthlyData);
+    fetchAccountTypes().then(setAccountTypeData);
+    fetchTransactions().then(setTransactions);
+  }, []);
+
+  const statItems = [
+    { label: '총 수신액', value: formatKRW(stats.totalDeposits ?? 0) + '원', growth: stats.depositGrowth, color: '#6366f1' },
+    { label: '총 여신액', value: formatKRW(stats.totalLoans ?? 0) + '원', growth: stats.loanGrowth, color: '#8b5cf6' },
+    { label: '총 고객수', value: (stats.totalCustomers ?? 0).toLocaleString() + '명', growth: stats.customerGrowth, color: '#06b6d4' },
+    { label: '월간 수익', value: formatKRW(stats.monthlyRevenue ?? 0) + '원', growth: stats.revenueGrowth, color: '#f59e0b' },
+  ];
+
   return (
     <div className="dashboard">
-      <div className="stat-cards">
-        {statCards.map((card) => (
-          <div key={card.label} className="stat-card">
-            <div className="stat-card-header">
-              <span className="stat-label">{card.label}</span>
-              <span className={`stat-growth ${card.growth >= 0 ? 'positive' : 'negative'}`}>
-                {card.growth >= 0 ? '+' : ''}{card.growth}%
-              </span>
-            </div>
-            <div className="stat-value">
-              {card.isCount ? card.value.toLocaleString() + '명' : formatKRW(card.value) + '원'}
-            </div>
-            <div className="stat-bar">
-              <div
-                className="stat-bar-fill"
-                style={{ width: `${Math.min(Math.abs(card.growth) * 5, 100)}%`, background: card.color }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
+      <StatCards items={statItems} />
 
       <div className="dashboard-grid">
-        <div className="card chart-card wide">
-          <div className="card-header">
-            <h3>수신/여신 추이</h3>
-            <span className="card-subtitle">월별 (단위: 억원)</span>
-          </div>
-          <div className="card-body chart-container">
+        <Card title="수신/여신 추이" subtitle="월별 (단위: 억원)" className="chart-card wide">
+          <div className="chart-container">
             <ResponsiveContainer width="100%" height={300}>
               <AreaChart data={monthlyData}>
                 <defs>
@@ -89,14 +84,10 @@ export default function Dashboard() {
               </AreaChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </Card>
 
-        <div className="card chart-card">
-          <div className="card-header">
-            <h3>월별 수익</h3>
-            <span className="card-subtitle">단위: 억원</span>
-          </div>
-          <div className="card-body chart-container">
+        <Card title="월별 수익" subtitle="단위: 억원" className="chart-card">
+          <div className="chart-container">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
@@ -107,25 +98,13 @@ export default function Dashboard() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </Card>
 
-        <div className="card chart-card">
-          <div className="card-header">
-            <h3>계좌 유형 비율</h3>
-            <span className="card-subtitle">전체 계좌 기준</span>
-          </div>
-          <div className="card-body pie-container">
+        <Card title="계좌 유형 비율" subtitle="전체 계좌 기준" className="chart-card">
+          <div className="pie-container">
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
-                <Pie
-                  data={accountTypeData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={55}
-                  outerRadius={90}
-                  paddingAngle={3}
-                  dataKey="value"
-                >
+                <Pie data={accountTypeData} cx="50%" cy="50%" innerRadius={55} outerRadius={90} paddingAngle={3} dataKey="value">
                   {accountTypeData.map((entry) => (
                     <Cell key={entry.name} fill={entry.color} />
                   ))}
@@ -143,51 +122,14 @@ export default function Dashboard() {
               ))}
             </div>
           </div>
-        </div>
+        </Card>
       </div>
 
-      <div className="card">
-        <div className="card-header">
-          <h3>최근 거래</h3>
-          <a href="/transactions" className="card-link">전체 보기 →</a>
-        </div>
-        <div className="card-body">
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>거래번호</th>
-                <th>고객명</th>
-                <th>구분</th>
-                <th>계좌번호</th>
-                <th>금액</th>
-                <th>일시</th>
-                <th>상태</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentTransactions.slice(0, 6).map((tx) => (
-                <tr key={tx.id}>
-                  <td className="mono">{tx.id}</td>
-                  <td className="bold">{tx.customer}</td>
-                  <td>
-                    <span className={`type-badge ${tx.type === '입금' ? 'deposit' : tx.type === '출금' ? 'withdraw' : tx.type === '이체' ? 'transfer' : 'loan'}`}>
-                      {tx.type}
-                    </span>
-                  </td>
-                  <td className="mono">{tx.account}</td>
-                  <td className="amount">{formatAmount(tx.amount)}</td>
-                  <td className="muted">{tx.date}</td>
-                  <td>
-                    <span className={`status-badge ${tx.status === '완료' ? 'success' : tx.status === '처리중' ? 'warning' : 'danger'}`}>
-                      {tx.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <Card title="최근 거래" action={<a href="/transactions" className="card-link">전체 보기 →</a>}>
+        <DataTable columns={columns} data={transactions.slice(0, 6)} onRowClick={setSelectedTx} />
+      </Card>
+
+      <TransactionDetail transaction={selectedTx} onClose={() => setSelectedTx(null)} />
     </div>
   );
 }
