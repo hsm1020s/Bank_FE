@@ -63,9 +63,9 @@ coverage
 *.lcov
 *.tsbuildinfo
 
-# Markdown 문서는 README.md + 설계 문서(docs/designs/**)만 추적.
-# CLAUDE.md·작업 로그·시행착오 등 나머지 .md는 로컬 전용으로 유지.
+# Markdown 문서는 루트 대표 README + 설계 문서(docs/designs/**)만 추적.
+# CLAUDE.md·하위 README·작업 로그·시행착오 등 나머지 .md는 로컬 전용으로 유지.
 *.md
-!README.md
+!/README.md
 !docs/designs/
 !docs/designs/**/*.md
