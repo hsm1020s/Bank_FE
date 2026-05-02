@@ -1,0 +1,45 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash($CLAUDE_PROJECT_DIR/.claude/hooks/phase.sh *)",
+      "Bash(bash /Users/moon/bank_React/.claude/hooks/phase.sh *)",
+      "Bash(/Users/moon/bank_React/.claude/hooks/phase.sh *)",
+      "Bash(git worktree *)",
+      "Bash(git branch *)",
+      "Bash(git -C /Users/moon/bank_React *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-edit.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-bash.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/post-bash-health.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
