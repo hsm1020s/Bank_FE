@@ -85,7 +85,44 @@ case "${1:-}" in
     echo "  $(basename "$0") <파일경로>"
     echo "  $(basename "$0") --all"
     echo "  $(basename "$0") --phase {P1|P2|P3|P4|P5}"
+    echo "  $(basename "$0") --check-index   # _index.json 의 모든 path 가 실재하는지 검증"
     exit 2
+    ;;
+  --check-index)
+    if ! command -v jq >/dev/null; then
+      echo "[FAIL] jq 가 필요합니다." >&2; exit 2
+    fi
+    if [[ ! -f "$INDEX" ]]; then
+      echo "[FAIL] 인덱스 없음: $INDEX" >&2; exit 2
+    fi
+    miss=0; ok=0
+    # screens
+    while IFS= read -r entry; do
+      id=$(echo "$entry" | jq -r '.key')
+      path=$(echo "$entry" | jq -r '.value.path')
+      full="$SPEC_DIR/$path"
+      if [[ -f "$full" ]]; then
+        ok=$((ok+1))
+      else
+        miss=$((miss+1))
+        echo "  ✗ [화면] $id → $path (파일 없음)" >&2
+      fi
+    done <<< "$(jq -c '.screens | to_entries[]' "$INDEX")"
+    # common
+    while IFS= read -r entry; do
+      id=$(echo "$entry" | jq -r '.key')
+      path=$(echo "$entry" | jq -r '.value.path')
+      full="$SPEC_DIR/$path"
+      if [[ -f "$full" ]]; then
+        ok=$((ok+1))
+      else
+        miss=$((miss+1))
+        echo "  ✗ [공통] $id → $path (파일 없음)" >&2
+      fi
+    done <<< "$(jq -c '.common | to_entries[]' "$INDEX")"
+    echo "" >&2
+    echo "[인덱스 무결성] 정상 $ok / 누락 $miss" >&2
+    [[ "$miss" -eq 0 ]] && exit 0 || exit 1
     ;;
   --all)
     if ! command -v jq >/dev/null; then
