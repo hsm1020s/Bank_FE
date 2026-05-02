@@ -1,13 +1,64 @@
 # Dependencies
-node_modules
+node_modules/
 
 # Build output
-dist
-dist-ssr
-build
+dist/
+dist-ssr/
 
-# Logs
-logs
+# Vite cache
+.vite/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+# VS Code Local History 플러그인
+.history/
+
+# Claude Code
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+# macOS AppleDouble 메타파일
+._*
+
+# Environment variables — 모든 .env 변형을 차단하고 템플릿만 예외 허용
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.local
+
+# Credentials / secrets / certificates
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+*_rsa
+*_ed25519
+secrets.json
+secrets.yaml
+secrets.yml
+credentials.json
+service-account*.json
+firebase-adminsdk*.json
+gcp-key*.json
+# npm/yarn 인증 토큰이 들어갈 수 있음
+.npmrc
+.yarnrc
+
+# Logs — 로그에 PII/토큰이 섞일 수 있어 전면 차단
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -15,55 +66,48 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Environment variables
-.env
-.env.local
-.env.development
-.env.development.local
-.env.test
-.env.test.local
-.env.production
-.env.production.local
-.env.staging
-*.local
+# Test coverage
+coverage/
+.nyc_output/
+*.lcov
 
-# Secrets / credentials
-*.pem
-*.key
-*.cert
-*.p12
-*.pfx
-credentials.json
-secrets.json
-serviceAccountKey.json
+# Build / bundler caches
+.cache/
+.turbo/
+.parcel-cache/
+*.tsbuildinfo
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-*.swp
-*.swo
+# Runtime / PID
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Database dumps (실수로 백엔드 덤프가 유입되는 사고 방지)
+*.sql
+*.dump
+*.sqlite
+*.sqlite3
+*.db
+
+# Backup / temp files
+*.tmp
+*.bak
+*.orig
 *~
 
-# OS files
-.DS_Store
-Thumbs.db
-Desktop.ini
-ehthumbs.db
+# direnv 자동 로드 환경변수 (실수로 키 박힘 방지)
+.envrc
 
-# Coverage / test reports
-coverage
-*.lcov
-.nyc_output
+# DevTools Network export — 헤더에 Bearer 토큰이 들어가는 사고 빈발
+*.har
 
-# Cache
-.cache
-.parcel-cache
-.eslintcache
-*.tsbuildinfo
+# Markdown 문서는 README.md + 설계 문서(docs/designs/**) + 화면정의서만 추적.
+# 작업 로그·시행착오·블로그 등 나머지 .md는 로컬 전용으로 유지.
+*.md
+!README.md
+!docs/designs/
+!docs/designs/**/*.md
+!화면정의서/
+!화면정의서/**/*.md
+!은행_코어뱅킹_*.md

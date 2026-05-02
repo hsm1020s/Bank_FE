@@ -5,8 +5,10 @@
 # Dependencies
 node_modules
 
-# Claude Code
-.claude
+# Claude Code — 하네스 인프라(commands/hooks/settings)는 추적, 상태/증거만 무시
+.claude/state/workflow.json
+.claude/state/evidence/
+.claude/settings.local.json
 
 # Build output
 dist
