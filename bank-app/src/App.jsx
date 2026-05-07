@@ -25,6 +25,9 @@ import {
   AdminCustomerSearch, AdminApprovalsPage,
   AdminOpsPage, AuditPage,
 } from './routes/admin/AdminPlaceholderPages';
+import CreditWorklistPage from './routes/admin/credit/CreditWorklistPage';
+import CreditReviewPage from './routes/admin/credit/CreditReviewPage';
+import DelinquentPage from './routes/admin/delinquent/DelinquentPage';
 
 import {
   NotFoundPage, ForbiddenPage, ServerErrorPage,
@@ -61,6 +64,9 @@ export const router = createBrowserRouter([
     children: [
       { path: '/admin', element: <AdminDashboardPage /> },
       { path: '/admin/customer/search', element: <AdminCustomerSearch /> },
+      { path: '/admin/credit', element: <CreditWorklistPage /> },
+      { path: '/admin/credit/:caseId', element: <CreditReviewPage /> },
+      { path: '/admin/delinquent', element: <DelinquentPage /> },
       { path: '/admin/approvals', element: <AdminApprovalsPage /> },
       { path: '/admin/ops', element: <AdminOpsPage /> },
       { path: '/admin/ops/release', element: <AdminOpsPage /> },
