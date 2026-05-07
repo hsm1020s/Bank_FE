@@ -20,9 +20,22 @@ export const adminMenu = [
     items: [
       { to: '/admin', label: '통합 대시보드' },
       { to: '/admin/customer/search', label: '고객 검색' },
+      { to: '/admin/customer/new', label: '신규 고객 등록' },
+      { to: '/admin/deposit', label: '수신 계좌 관리' },
+      { to: '/admin/teller', label: '창구 거래 처리' },
+      { to: '/admin/teller/adjust', label: '거래 정정/취소' },
+      { to: '/admin/approvals', label: '전자 결재' },
+    ],
+  },
+  {
+    group: '여신',
+    items: [
       { to: '/admin/credit', label: '여신 심사' },
+      { to: '/admin/loan/contracts', label: '약정 관리' },
+      { to: '/admin/loan/disburse', label: '실행 (지급)' },
       { to: '/admin/delinquent', label: '연체 관리' },
-      { to: '/admin/approvals', label: '결재함' },
+      { to: '/admin/loan/npl', label: '부실채권/상각' },
+      { to: '/admin/loan/seizure', label: '압류/가압류' },
     ],
   },
   {
@@ -30,14 +43,16 @@ export const adminMenu = [
     items: [
       { to: '/admin/aml', label: 'AML / STR / CTR' },
       { to: '/admin/agent/console', label: '에이전트 운영 콘솔' },
+      { to: '/admin/regulatory', label: '규제 보고서' },
     ],
   },
   {
     group: '운영',
     items: [
       { to: '/admin/ops', label: '운영 콘솔' },
-      { to: '/admin/ops/release', label: '배포/회수' },
-      { to: '/admin/ops/healthcheck', label: 'HealthCheck' },
+      { to: '/admin/ops/incident', label: '사고신고/보이스피싱' },
+      { to: '/admin/ops/healthcheck', label: '시스템/배치' },
+      { to: '/admin/product', label: '상품 마스터' },
     ],
   },
   {
@@ -368,4 +383,133 @@ export const loanCatalog = [
   { code: 'L-MTG-A', name: '주택담보 대출 (주거용)', kind: '주담대', min: 3.5, avg: 4.4, max: 5.4, max_amount: 1_000_000_000 },
   { code: 'L-JEN', name: '전세자금 대출', kind: '전세', min: 3.0, avg: 4.0, max: 5.0, max_amount: 500_000_000 },
   { code: 'L-MN', name: '마이너스 통장', kind: '마이너스', min: 5.0, avg: 6.5, max: 8.5, max_amount: 50_000_000 },
+];
+
+export const customerSearchResults = [
+  { id: 'C-100023', name: '홍**', resident: '88****-1******', phone: '010-****-1234', branch: '강남' },
+  { id: 'C-100051', name: '김**', resident: '92****-2******', phone: '010-****-5678', branch: '강남' },
+  { id: 'C-100078', name: '박**', resident: '85****-1******', phone: '010-****-7890', branch: '서초' },
+];
+
+export const cifSummary = {
+  id: 'C-100023',
+  name: '홍길동',
+  status: 'active', // active / deceased / guardian
+  birth: '1988-12-12',
+  resident: '881212-1******',
+  phone: '010-****-1234',
+  email: 'hong@example.com',
+  branch: '강남',
+  amlRisk: 'LOW',
+  pep: false,
+  joinedAt: '2018-03-12',
+  domains: {
+    deposit: 4, loan: 1, card: 2, fx: 0, invest: 1, applied: 3, aml: 0,
+  },
+};
+
+export const cifTimeline = [
+  { ts: '2026-05-07 09:14', kind: 'TX', text: '이체 500,000 → 국민*** (OTP 검증)' },
+  { ts: '2026-05-05 11:22', kind: 'AUTH', text: '디바이스 추가 등록' },
+  { ts: '2026-04-30 14:01', kind: 'CONSENT', text: '마케팅 이메일 OFF' },
+  { ts: '2026-04-12 10:08', kind: 'LOAN', text: '신용대출 5천만 실행' },
+];
+
+export const newCustomerSteps = ['신분증 OCR', '얼굴 비교', '진위확인 API', 'AML/PEP 스크리닝', '책임자 결재', '완료'];
+
+export const accountManageList = [
+  { id: 'ACC-001', cif: 'C-100023', alias: '주거래', balance: 12_340_500, status: 'active', limitMode: '일반', stop: false },
+  { id: 'ACC-002', cif: 'C-100023', alias: 'CMA', balance: 5_430_000, status: 'active', limitMode: '한도제한', stop: false },
+  { id: 'ACC-003', cif: 'C-100051', alias: '월급', balance: 3_120_000, status: 'frozen', limitMode: '일반', stop: true },
+];
+
+export const tellerTxKinds = [
+  { code: 'CASH_IN', label: '현금 입금' },
+  { code: 'CASH_OUT', label: '현금 출금' },
+  { code: 'TX', label: '계좌 이체' },
+  { code: 'FX', label: '외화 환전' },
+  { code: 'BOND', label: '자기앞수표' },
+  { code: 'DEP_OPEN', label: '예적금 가입' },
+  { code: 'DEP_CLOSE', label: '예적금 해지' },
+];
+
+export const fxRate = { pair: 'USD/KRW', rate: 1378.20, lastAt: '2026-05-07 13:48', stale: false };
+
+export const txAdjustReasons = [
+  { code: 'WRONG_AMOUNT', label: '금액 오류' },
+  { code: 'WRONG_TARGET', label: '대상 오류' },
+  { code: 'DUP', label: '중복 거래' },
+  { code: 'OTHER', label: '기타 (컴플라이언스 결재 추가)' },
+];
+
+export const loanContracts = [
+  { id: 'L-2026-0042', customer: '홍길동', kind: '신용', principal: 50_000_000, remaining: 25_000_000, rate: 5.4, status: '정상' },
+  { id: 'L-2026-0091', customer: '김영희', kind: '주담대', principal: 300_000_000, remaining: 287_500_000, rate: 4.4, status: '정상' },
+  { id: 'L-2025-0188', customer: '박철수', kind: '신용', principal: 30_000_000, remaining: 28_500_000, rate: 6.5, status: '연체' },
+];
+
+export const nplCases = [
+  { id: 'NPL-001', customer: '박철수', remaining: 28_500_000, classification: '회수의문', overdue: 95, action: '상각 후보' },
+  { id: 'NPL-002', customer: '최미정', remaining: 12_000_000, classification: '추정손실', overdue: 180, action: '매각 검토' },
+];
+
+export const seizureCases = [
+  { id: 'SZ-001', court: '서울중앙지법', kind: '본압류', target: 'ACC-001 200만', priority: 1, status: '차단됨' },
+  { id: 'SZ-002', court: '국세청', kind: '국세 체납', target: 'ACC-002 50만', priority: 0, status: '우선 적용 (국세 절대 우선)' },
+  { id: 'SZ-003', court: '서울중앙지법', kind: '가압류', target: 'ACC-003 30만', priority: 2, status: '본압류 대기' },
+];
+
+export const incidentQueue = [
+  { id: 'INC-001', source: 'CUS-020', priority: 'P1', kind: '보이스피싱', customer: '고**', received: '14:02' },
+  { id: 'INC-002', source: '콜센터', priority: 'P1', kind: '카드 분실', customer: '김**', received: '13:45' },
+  { id: 'INC-003', source: '영업점', priority: 'P2', kind: '의심 거래', customer: '박**', received: '13:21' },
+];
+
+export const batchJobs = [
+  { code: 'BAT-001', name: '일일 정산', schedule: '01:00', state: 'OK', last: '01:08' },
+  { code: 'BAT-002', name: '이자 계산', schedule: '02:00', state: 'OK', last: '02:14' },
+  { code: 'BAT-003', name: '연체 전이', schedule: '03:00', state: 'OK', last: '03:05' },
+  { code: 'BAT-004', name: '감사로그 머클', schedule: '04:00', state: 'OK', last: '04:02' },
+  { code: 'BAT-005', name: 'CTR 자동 등록', schedule: '05:00', state: 'OK', last: '05:11' },
+  { code: 'BAT-006', name: 'KoFIU 보고 큐', schedule: '06:00', state: 'OK', last: '06:09' },
+  { code: 'BAT-007', name: '신용평가 갱신', schedule: '06:30', state: 'OK', last: '06:42' },
+  { code: 'BAT-008', name: 'AML 제재 명단', schedule: '07:00', state: 'FAIL', last: '07:01 (24h+)' },
+  { code: 'BAT-009', name: 'FDS 룰 갱신', schedule: '08:00', state: 'OK', last: '08:03' },
+  { code: 'BAT-010', name: '비밀번호 만료 알림', schedule: '09:00', state: 'OK', last: '09:00' },
+  { code: 'BAT-011', name: '한도 상향 적용', schedule: '09:30', state: 'OK', last: '09:30' },
+  { code: 'BAT-012', name: '환율 갱신', schedule: '매시', state: 'WARN', last: '14:00 (1회 실패)' },
+];
+
+export const systemHealth = [
+  { name: '계정계', status: 'OK', latency: '12ms' },
+  { name: '채널계', status: 'OK', latency: '8ms' },
+  { name: '대외계', status: 'WARN', latency: '420ms' },
+  { name: 'DB', status: 'OK', latency: '3ms' },
+  { name: '캐시', status: 'OK', latency: '0.5ms' },
+  { name: 'MQ', status: 'OK', latency: '4ms' },
+];
+
+export const regulatoryReports = [
+  { cat: 'KoFIU', items: [{ code: 'STR-MONTHLY', name: 'STR 월보', status: '제출 완료', dueAt: '2026-05-10' }] },
+  { cat: '신용정보원', items: [{ code: 'CIE-DAILY', name: '신용정보 일일 보고', status: '진행 중', dueAt: '2026-05-08' }] },
+  { cat: '금감원', items: [{ code: 'BIS', name: 'BIS 비율 분기', status: '대기', dueAt: '2026-06-30' }] },
+  { cat: '가계부채', items: [{ code: 'HFC', name: '가계 대출 잔액 보고', status: '제출 완료', dueAt: '2026-05-05' }] },
+];
+
+export const approvalsList = [
+  { id: 'AP-001', kind: '한도 상향', requester: '김창구', amount: 1_000_000, status: '진행 중', sla: 'D-1' },
+  { id: 'AP-002', kind: '마스킹 풀기 사후 승인', requester: 'kim_***', amount: 0, status: '진행 중', sla: 'D-3' },
+  { id: 'AP-003', kind: '자동결정 거부 → 사람 심사', requester: 'agent', amount: 50_000_000, status: '대기', sla: 'D-7' },
+];
+
+export const productMasterTree = [
+  { code: 'P-DEP', name: '수신', children: [
+    { code: 'P-DEP-12M', name: '정기예금 12M' },
+    { code: 'P-DEP-24M', name: '정기예금 24M' },
+    { code: 'P-INST-3Y', name: '자유적금 36M' },
+  ] },
+  { code: 'P-LOAN', name: '여신', children: [
+    { code: 'L-CR-CL', name: '직장인 신용대출' },
+    { code: 'L-MTG-A', name: '주택담보 (주거)' },
+  ] },
 ];

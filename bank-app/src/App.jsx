@@ -28,16 +28,28 @@ import LoanRateReductionPage from './routes/customer/loan/LoanRateReductionPage'
 import AdminLayout from './routes/admin/AdminLayout';
 import AdminLoginPage from './routes/admin/AdminLoginPage';
 import AdminDashboardPage from './routes/admin/AdminDashboardPage';
-import {
-  AdminCustomerSearch, AdminApprovalsPage,
-  AdminOpsPage, AuditPage,
-} from './routes/admin/AdminPlaceholderPages';
+import { AdminOpsPage, AuditPage } from './routes/admin/AdminPlaceholderPages';
 import CreditWorklistPage from './routes/admin/credit/CreditWorklistPage';
 import CreditReviewPage from './routes/admin/credit/CreditReviewPage';
 import DelinquentPage from './routes/admin/delinquent/DelinquentPage';
 import AmlConsolePage from './routes/admin/aml/AmlConsolePage';
 import AgentOpsConsolePage from './routes/admin/agent/AgentOpsConsolePage';
 import AuditLogPage from './routes/admin/audit/AuditLogPage';
+import CustomerSearchPage from './routes/admin/customer/CustomerSearchPage';
+import CifPage from './routes/admin/customer/CifPage';
+import NewCustomerPage from './routes/admin/customer/NewCustomerPage';
+import DepositManagePage from './routes/admin/deposit/DepositManagePage';
+import TellerTxPage from './routes/admin/deposit/TellerTxPage';
+import TxAdjustPage from './routes/admin/deposit/TxAdjustPage';
+import LoanContractMgmtPage from './routes/admin/credit/LoanContractMgmtPage';
+import LoanDisbursePage from './routes/admin/credit/LoanDisbursePage';
+import NplPage from './routes/admin/credit/NplPage';
+import SeizurePage from './routes/admin/credit/SeizurePage';
+import IncidentResponsePage from './routes/admin/ops/IncidentResponsePage';
+import SystemMonitorPage from './routes/admin/ops/SystemMonitorPage';
+import RegulatoryReportPage from './routes/admin/compliance/RegulatoryReportPage';
+import ApprovalsPage from './routes/admin/approvals/ApprovalsPage';
+import ProductMasterPage from './routes/admin/product/ProductMasterPage';
 
 import {
   NotFoundPage, ForbiddenPage, ServerErrorPage,
@@ -79,16 +91,28 @@ export const router = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       { path: '/admin', element: <AdminDashboardPage /> },
-      { path: '/admin/customer/search', element: <AdminCustomerSearch /> },
+      { path: '/admin/customer/search', element: <CustomerSearchPage /> },
+      { path: '/admin/customer/new', element: <NewCustomerPage /> },
+      { path: '/admin/customer/:id', element: <CifPage /> },
+      { path: '/admin/deposit', element: <DepositManagePage /> },
+      { path: '/admin/teller', element: <TellerTxPage /> },
+      { path: '/admin/teller/adjust', element: <TxAdjustPage /> },
       { path: '/admin/credit', element: <CreditWorklistPage /> },
       { path: '/admin/credit/:caseId', element: <CreditReviewPage /> },
+      { path: '/admin/loan/contracts', element: <LoanContractMgmtPage /> },
+      { path: '/admin/loan/disburse', element: <LoanDisbursePage /> },
+      { path: '/admin/loan/npl', element: <NplPage /> },
+      { path: '/admin/loan/seizure', element: <SeizurePage /> },
       { path: '/admin/delinquent', element: <DelinquentPage /> },
       { path: '/admin/aml', element: <AmlConsolePage /> },
       { path: '/admin/agent/console', element: <AgentOpsConsolePage /> },
-      { path: '/admin/approvals', element: <AdminApprovalsPage /> },
+      { path: '/admin/regulatory', element: <RegulatoryReportPage /> },
+      { path: '/admin/approvals', element: <ApprovalsPage /> },
+      { path: '/admin/product', element: <ProductMasterPage /> },
       { path: '/admin/ops', element: <AdminOpsPage /> },
+      { path: '/admin/ops/incident', element: <IncidentResponsePage /> },
       { path: '/admin/ops/release', element: <AdminOpsPage /> },
-      { path: '/admin/ops/healthcheck', element: <AdminOpsPage /> },
+      { path: '/admin/ops/healthcheck', element: <SystemMonitorPage /> },
       { path: '/audit', element: <AuditPage /> },
       { path: '/audit/logs', element: <AuditLogPage /> },
     ],
