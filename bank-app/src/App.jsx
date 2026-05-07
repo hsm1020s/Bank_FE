@@ -6,18 +6,24 @@ import LoginPage from './routes/customer/LoginPage';
 import SignupPage from './routes/customer/SignupPage';
 import AuthMethodsPage from './routes/customer/AuthMethodsPage';
 import DashboardPage from './routes/customer/DashboardPage';
-import {
-  DocumentsPage, LimitsPage,
-  ComplaintsPage, SecurityReportPage,
-} from './routes/customer/PlaceholderPages';
 import ProfilePage from './routes/customer/ProfilePage';
+import DocumentsPage from './routes/customer/DocumentsPage';
+import LimitsPage from './routes/customer/LimitsPage';
+import ComplaintsPage from './routes/customer/ComplaintsPage';
+import SecurityReportPage from './routes/customer/SecurityReportPage';
 import DepositListPage from './routes/customer/deposit/DepositListPage';
 import DepositDetailPage from './routes/customer/deposit/DepositDetailPage';
 import DepositOpenPage from './routes/customer/deposit/DepositOpenPage';
+import DepositClosePage from './routes/customer/deposit/DepositClosePage';
 import TransferPage from './routes/customer/transfer/TransferPage';
+import AutoTransferPage from './routes/customer/transfer/AutoTransferPage';
 import LoanApplyPage from './routes/customer/loan/LoanApplyPage';
 import LoanDetailPage from './routes/customer/loan/LoanDetailPage';
 import LoanRepayPage from './routes/customer/loan/LoanRepayPage';
+import LoanCatalogPage from './routes/customer/loan/LoanCatalogPage';
+import LoanPreCheckPage from './routes/customer/loan/LoanPreCheckPage';
+import LoanContractPage from './routes/customer/loan/LoanContractPage';
+import LoanRateReductionPage from './routes/customer/loan/LoanRateReductionPage';
 
 import AdminLayout from './routes/admin/AdminLayout';
 import AdminLoginPage from './routes/admin/AdminLoginPage';
@@ -50,11 +56,17 @@ export const router = createBrowserRouter([
       { path: '/deposit', element: <DepositListPage /> },
       { path: '/deposit/new', element: <DepositOpenPage /> },
       { path: '/deposit/:id', element: <DepositDetailPage /> },
+      { path: '/deposit/:id/close', element: <DepositClosePage /> },
       { path: '/transfer', element: <TransferPage /> },
-      { path: '/loan', element: <Navigate to="/loan/apply" replace /> },
+      { path: '/transfer/auto', element: <AutoTransferPage /> },
+      { path: '/loan', element: <Navigate to="/loan/catalog" replace /> },
+      { path: '/loan/catalog', element: <LoanCatalogPage /> },
+      { path: '/loan/precheck', element: <LoanPreCheckPage /> },
       { path: '/loan/apply', element: <LoanApplyPage /> },
+      { path: '/loan/contract', element: <LoanContractPage /> },
       { path: '/loan/:id', element: <LoanDetailPage /> },
       { path: '/loan/:id/repay', element: <LoanRepayPage /> },
+      { path: '/loan/:id/rate-reduction', element: <LoanRateReductionPage /> },
       { path: '/documents', element: <DocumentsPage /> },
       { path: '/limits', element: <LimitsPage /> },
       { path: '/profile', element: <ProfilePage /> },

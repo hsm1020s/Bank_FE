@@ -330,3 +330,42 @@ export const integrityCheck = {
   lastVerifiedAt: '2026-05-07 09:00:00',
   totalEntries: 1_240_055,
 };
+
+export const autoTransfers = [
+  { id: 'A-1', target: '엄마 (국민 1234-***-5678)', amount: 500_000, schedule: '매월 25일', mode: '고정', status: 'active' },
+  { id: 'A-2', target: '월세 (신한 8888-***-2222)', amount: 800_000, schedule: '매월 1일', mode: '고정', status: 'active' },
+  { id: 'A-3', target: 'CMA 잔액 이체', amount: 0, schedule: '매주 금', mode: '잔액기준 100만↑', status: 'active' },
+  { id: 'A-4', target: '카드사 (하나 7777-***-1111)', amount: 0, schedule: '매월 15일', mode: '청구액', status: 'paused' },
+];
+
+export const accidentCategories = [
+  { key: 'card_lost', label: '카드 분실/도난', mode: 'revoke', target: '재발급' },
+  { key: 'pkii_lost', label: '인증서 분실', mode: 'revoke', target: '재발급' },
+  { key: 'account_lost', label: '통장 분실', mode: 'revoke', target: '재발급' },
+  { key: 'voice_phishing', label: '보이스피싱 피해', mode: 'freeze', target: 'KFTC 채권소멸 + D+5 환급' },
+  { key: 'suspect', label: '의심 거래', mode: 'freeze', target: '복구 가능 (해제 가능)' },
+  { key: 'compromise', label: '계정 탈취 의심', mode: 'revoke', target: '전수 재발급' },
+];
+
+export const documentTypes = [
+  { code: 'BAL', name: '잔액증명서', desc: '특정일자 잔액 증명' },
+  { code: 'TX',  name: '거래내역서', desc: '기간 내 거래 명세' },
+  { code: 'DEBT', name: '부채증명서', desc: '대출 잔액·이자 증명' },
+  { code: 'INT', name: '이자납부증명', desc: '연말정산용' },
+  { code: 'FX',  name: '외화송금확인서', desc: '송금 사유·환율 포함' },
+  { code: 'EN',  name: '영문증명서', desc: '영문명 등록 필수' },
+];
+
+export const customerLimits = [
+  { kind: '이체', perTx: 10_000_000, perDay: 50_000_000, max: 100_000_000 },
+  { kind: '출금', perTx: 5_000_000, perDay: 30_000_000, max: 50_000_000 },
+  { kind: '카드', perTx: 3_000_000, perDay: 10_000_000, max: 30_000_000 },
+  { kind: '외화', perTx: 50_000, perDay: 100_000, max: 1_000_000 },
+];
+
+export const loanCatalog = [
+  { code: 'L-CR-CL', name: '직장인 신용대출', kind: '신용', min: 4.2, avg: 5.6, max: 7.9, max_amount: 100_000_000 },
+  { code: 'L-MTG-A', name: '주택담보 대출 (주거용)', kind: '주담대', min: 3.5, avg: 4.4, max: 5.4, max_amount: 1_000_000_000 },
+  { code: 'L-JEN', name: '전세자금 대출', kind: '전세', min: 3.0, avg: 4.0, max: 5.0, max_amount: 500_000_000 },
+  { code: 'L-MN', name: '마이너스 통장', kind: '마이너스', min: 5.0, avg: 6.5, max: 8.5, max_amount: 50_000_000 },
+];
