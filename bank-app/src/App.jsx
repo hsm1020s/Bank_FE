@@ -7,9 +7,10 @@ import SignupPage from './routes/customer/SignupPage';
 import AuthMethodsPage from './routes/customer/AuthMethodsPage';
 import DashboardPage from './routes/customer/DashboardPage';
 import {
-  DocumentsPage, LimitsPage, ProfilePage,
+  DocumentsPage, LimitsPage,
   ComplaintsPage, SecurityReportPage,
 } from './routes/customer/PlaceholderPages';
+import ProfilePage from './routes/customer/ProfilePage';
 import DepositListPage from './routes/customer/deposit/DepositListPage';
 import DepositDetailPage from './routes/customer/deposit/DepositDetailPage';
 import DepositOpenPage from './routes/customer/deposit/DepositOpenPage';
@@ -28,6 +29,9 @@ import {
 import CreditWorklistPage from './routes/admin/credit/CreditWorklistPage';
 import CreditReviewPage from './routes/admin/credit/CreditReviewPage';
 import DelinquentPage from './routes/admin/delinquent/DelinquentPage';
+import AmlConsolePage from './routes/admin/aml/AmlConsolePage';
+import AgentOpsConsolePage from './routes/admin/agent/AgentOpsConsolePage';
+import AuditLogPage from './routes/admin/audit/AuditLogPage';
 
 import {
   NotFoundPage, ForbiddenPage, ServerErrorPage,
@@ -67,12 +71,14 @@ export const router = createBrowserRouter([
       { path: '/admin/credit', element: <CreditWorklistPage /> },
       { path: '/admin/credit/:caseId', element: <CreditReviewPage /> },
       { path: '/admin/delinquent', element: <DelinquentPage /> },
+      { path: '/admin/aml', element: <AmlConsolePage /> },
+      { path: '/admin/agent/console', element: <AgentOpsConsolePage /> },
       { path: '/admin/approvals', element: <AdminApprovalsPage /> },
       { path: '/admin/ops', element: <AdminOpsPage /> },
       { path: '/admin/ops/release', element: <AdminOpsPage /> },
       { path: '/admin/ops/healthcheck', element: <AdminOpsPage /> },
       { path: '/audit', element: <AuditPage /> },
-      { path: '/audit/logs', element: <AuditPage /> },
+      { path: '/audit/logs', element: <AuditLogPage /> },
     ],
   },
   { path: '/forbidden', element: <ForbiddenPage /> },

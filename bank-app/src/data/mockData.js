@@ -26,6 +26,13 @@ export const adminMenu = [
     ],
   },
   {
+    group: '컴플라이언스',
+    items: [
+      { to: '/admin/aml', label: 'AML / STR / CTR' },
+      { to: '/admin/agent/console', label: '에이전트 운영 콘솔' },
+    ],
+  },
+  {
     group: '운영',
     items: [
       { to: '/admin/ops', label: '운영 콘솔' },
@@ -231,3 +238,95 @@ export const delinquentCases = [
   { id: 'D-007', stage: 4, customer: '고객G', principal: 120_000_000, interest: 6_400_000, days: 95, recent: '사전최고', product: '주담대' },
   { id: 'D-008', stage: 4, customer: '고객H', principal: 48_000_000, interest: 2_100_000, days: 102, recent: '결재대기', product: '신용대출' },
 ];
+
+export const consentMatrix = [
+  { key: 'mkt_sms', label: '마케팅 SMS', required: false, value: true },
+  { key: 'mkt_email', label: '마케팅 이메일', required: false, value: false },
+  { key: 'mkt_push', label: '마케팅 PUSH', required: false, value: true },
+  { key: 'voice_record', label: '음성 녹취 보관', required: false, value: true },
+  { key: 'credit_query', label: '신용정보 조회', required: true, value: true },
+  { key: 'credit_share', label: '신용정보 제공', required: false, value: false },
+  { key: 'auto_decision_refused', label: 'AI 자동결정 거부', required: false, value: true },
+];
+
+export const userDevices = [
+  { id: 'd1', name: 'Mac / Safari 26', os: 'macOS 14.6', last: '2026-05-07 09:12', current: true },
+  { id: 'd2', name: 'iPhone 15 / iOS 19', os: 'iOS 19.1', last: '2026-05-06 21:33', current: false },
+  { id: 'd3', name: 'iPad Pro / iOS 19', os: 'iPadOS 19.0', last: '2026-05-04 14:11', current: false },
+  { id: 'd4', name: 'Windows / Chrome 130', os: 'Win11', last: '2026-04-29 10:02', current: false },
+  { id: 'd5', name: 'Galaxy Tab / Android 16', os: 'Android 16', last: '2026-04-27 19:45', current: false },
+  { id: 'd6', name: 'Pixel 8 / Android 16', os: 'Android 16', last: '2026-04-21 22:08', current: false },
+];
+
+export const consentHistory = [
+  { at: '2026-04-30 14:01', who: 'self', action: '마케팅 이메일 OFF' },
+  { at: '2026-03-12 10:08', who: 'self', action: 'AI 자동결정 거부 ON' },
+  { at: '2025-12-30 09:00', who: 'self', action: '약관 v3.2 동의' },
+];
+
+export const strCases = [
+  { id: 'STR-2026-0044', txId: 'TX-2026-77881', customer: '고**', amount: 23_000_000, channel: '인터넷뱅킹', rule: 'SUDDEN_LARGE_FOREIGN', score: 0.78, sla: 'D-23', status: '메이커 대기' },
+  { id: 'STR-2026-0043', txId: 'TX-2026-77502', customer: '김**', amount: 8_900_000, channel: '모바일', rule: 'STRUCTURING', score: 0.62, sla: 'D-21', status: '체커 대기' },
+  { id: 'STR-2026-0042', txId: 'TX-2026-77001', customer: '박**', amount: 51_000_000, channel: '창구', rule: 'CASH_INTENSIVE', score: 0.91, sla: 'D-15', status: 'KoFIU 보고' },
+];
+
+export const ctrCases = [
+  { id: 'CTR-2026-1101', txId: 'TX-2026-78001', customer: '이**', amount: 12_500_000, channel: '창구', auto: true, sla: 'D-30 / 운영 D-7' },
+  { id: 'CTR-2026-1102', txId: 'TX-2026-78014', customer: '한**', amount: 30_000_000, channel: '인터넷', auto: true, sla: 'D-29 / 운영 D-6' },
+];
+
+export const sanctionMatches = [
+  { id: 'SM-001', txId: 'TX-2026-78201', name: 'IVAN P***', score: 0.97, list: 'OFAC SDN', action: '즉시 차단' },
+  { id: 'SM-002', txId: 'TX-2026-78230', name: 'AHMED K***', score: 0.82, list: 'EU/UN', action: '검토 큐 (5분 SLA)' },
+  { id: 'SM-003', txId: 'TX-2026-78245', name: 'JOHN S***', score: 0.55, list: 'OFAC', action: '후보' },
+];
+
+export const amlRules = [
+  { id: 'R-001', name: '단기 대량 외환', version: 'v3', active: true, threshold: '24h ≥ 100m KRW', updated: '2026-04-12' },
+  { id: 'R-002', name: '구조적 분산이체', version: 'v5', active: true, threshold: '7d ≥ 5건 + 변동계수 0.2 이하', updated: '2026-04-30' },
+  { id: 'R-003', name: '현금 집중', version: 'v2', active: false, threshold: '30d 현금비율 ≥ 80%', updated: '2026-02-01' },
+];
+
+export const agentKpis = [
+  { key: 'calls', label: '오늘 호출수', value: 12_034, unit: '건' },
+  { key: 'auto', label: '자동완결률', value: '78%', delta: '+2%p', tone: 'positive' },
+  { key: 'fall', label: '폴백률', value: '12%', delta: '-1%p', tone: 'positive' },
+  { key: 'csat', label: '만족도', value: 4.2, unit: '/5', delta: '+0.1', tone: 'positive' },
+  { key: 'halluc', label: '환각 의심', value: 7, unit: '건', tone: 'negative' },
+  { key: 'cost', label: '비용 (오늘)', value: 142_000, unit: 'KRW', tone: 'neutral' },
+];
+
+export const agentLiveStream = [
+  { id: 1, time: '14:02:08', user: 'cust:hong**', screen: '/transfer', risk: 'L2', text: '엄마한테 50만원 이체해줘 — OTP 모달 트리거됨' },
+  { id: 2, time: '14:01:51', user: 'cust:kim**',  screen: '/dashboard', risk: 'L0', text: '잔액 보여줘 — 마스킹 default로 응답' },
+  { id: 3, time: '14:00:33', user: 'cust:park**', screen: '/loan/apply', risk: 'L4', text: '대출 자동 결정 — 사람 검토 큐 라우팅' },
+  { id: 4, time: '13:59:12', user: 'cust:lee**',  screen: '/profile',  risk: 'L1', text: '주소 변경 — OTP+ARS 안내' },
+];
+
+export const agentL4Queue = [
+  { id: 'L4-001', screen: '/loan/apply', user: 'cust:park**', summary: '대출 자동 결정 → 사람 검토', requestedAt: '14:00:33', maker: null },
+  { id: 'L4-002', screen: '/transfer', user: 'cust:choi**', summary: '신규 수취인 + 고액 야간 이체', requestedAt: '13:54:12', maker: null },
+];
+
+export const auditLogList = Array.from({ length: 30 }, (_, i) => {
+  const isStr = i % 7 === 0;
+  return {
+    ts: `2026-05-${String(7 - (i % 7)).padStart(2, '0')} ${String((i * 3) % 24).padStart(2, '0')}:${String((i * 11) % 60).padStart(2, '0')}:00`,
+    actor: i % 3 === 0 ? 'cust:hong**' : i % 3 === 1 ? 'emp:kim_***' : 'agent:assistant',
+    ip: `192.0.2.${(i * 7) % 250}`,
+    screen: ['/dashboard','/transfer','/loan/apply','/admin/credit','/profile'][i % 5],
+    action: ['LOGIN','TRANSFER_EXEC','UNMASK','APPROVE_CREDIT','UPDATE_CONSENT'][i % 5],
+    result: i % 11 === 0 ? 'BLOCKED' : 'OK',
+    risk: ['L0','L1','L2','L3','L4'][i % 5],
+    targetId: isStr ? 'STR-***' : `T-${1000 + i}`,
+    hash: `0x${(i * 0xa5b3).toString(16).padStart(8, '0')}…`,
+  };
+});
+
+export const integrityCheck = {
+  chainHashOk: true,
+  merkleRootOk: true,
+  tsaOk: true,
+  lastVerifiedAt: '2026-05-07 09:00:00',
+  totalEntries: 1_240_055,
+};
