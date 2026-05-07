@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import CustomerLayout from './routes/customer/CustomerLayout';
 import HomePage from './routes/customer/HomePage';
@@ -7,10 +7,16 @@ import SignupPage from './routes/customer/SignupPage';
 import AuthMethodsPage from './routes/customer/AuthMethodsPage';
 import DashboardPage from './routes/customer/DashboardPage';
 import {
-  DepositPage, TransferPage, LoanPage,
   DocumentsPage, LimitsPage, ProfilePage,
   ComplaintsPage, SecurityReportPage,
 } from './routes/customer/PlaceholderPages';
+import DepositListPage from './routes/customer/deposit/DepositListPage';
+import DepositDetailPage from './routes/customer/deposit/DepositDetailPage';
+import DepositOpenPage from './routes/customer/deposit/DepositOpenPage';
+import TransferPage from './routes/customer/transfer/TransferPage';
+import LoanApplyPage from './routes/customer/loan/LoanApplyPage';
+import LoanDetailPage from './routes/customer/loan/LoanDetailPage';
+import LoanRepayPage from './routes/customer/loan/LoanRepayPage';
 
 import AdminLayout from './routes/admin/AdminLayout';
 import AdminLoginPage from './routes/admin/AdminLoginPage';
@@ -34,9 +40,14 @@ export const router = createBrowserRouter([
       { path: '/signup', element: <SignupPage /> },
       { path: '/auth/methods', element: <AuthMethodsPage /> },
       { path: '/dashboard', element: <DashboardPage /> },
-      { path: '/deposit', element: <DepositPage /> },
+      { path: '/deposit', element: <DepositListPage /> },
+      { path: '/deposit/new', element: <DepositOpenPage /> },
+      { path: '/deposit/:id', element: <DepositDetailPage /> },
       { path: '/transfer', element: <TransferPage /> },
-      { path: '/loan', element: <LoanPage /> },
+      { path: '/loan', element: <Navigate to="/loan/apply" replace /> },
+      { path: '/loan/apply', element: <LoanApplyPage /> },
+      { path: '/loan/:id', element: <LoanDetailPage /> },
+      { path: '/loan/:id/repay', element: <LoanRepayPage /> },
       { path: '/documents', element: <DocumentsPage /> },
       { path: '/limits', element: <LimitsPage /> },
       { path: '/profile', element: <ProfilePage /> },
