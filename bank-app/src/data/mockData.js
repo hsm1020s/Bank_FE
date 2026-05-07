@@ -20,6 +20,8 @@ export const adminMenu = [
     items: [
       { to: '/admin', label: '통합 대시보드' },
       { to: '/admin/customer/search', label: '고객 검색' },
+      { to: '/admin/credit', label: '여신 심사' },
+      { to: '/admin/delinquent', label: '연체 관리' },
       { to: '/admin/approvals', label: '결재함' },
     ],
   },
@@ -154,3 +156,78 @@ export const auditLogSamples = [
 ];
 
 export const fcpaRates = { min: 4.2, avg: 5.6, max: 7.9 };
+
+export const adminKpis = [
+  { key: 'tx_today', label: '오늘 거래 건수', value: 18234, unit: '건', delta: '+5.2%', tone: 'positive', forRoles: ['TELLER','CRED','AML','AUDITOR'] },
+  { key: 'tx_amount', label: '오늘 거래 금액', value: 12_400_000_000, unit: 'KRW', delta: '+1.8%', tone: 'positive', forRoles: ['TELLER','AUDITOR'] },
+  { key: 'cred_pending', label: '여신 심사 대기', value: 47, unit: '건', delta: '+12', tone: 'negative', forRoles: ['CRED','AUDITOR'] },
+  { key: 'cred_approved', label: '오늘 승인', value: 23, unit: '건', delta: '+3', tone: 'positive', forRoles: ['CRED','AUDITOR'] },
+  { key: 'aml_match', label: 'AML 매칭', value: 9, unit: '건', delta: '+2', tone: 'negative', forRoles: ['AML','AUDITOR'] },
+  { key: 'fds_block', label: 'FDS 차단', value: 41, unit: '건', delta: '+8', tone: 'negative', forRoles: ['TELLER','AML','AUDITOR'] },
+  { key: 'delinq_total', label: '연체 잔액', value: 1_240_000_000, unit: 'KRW', delta: '-0.4%', tone: 'positive', forRoles: ['CRED','AUDITOR'] },
+  { key: 'approvals', label: '결재 미처리', value: 7, unit: '건', delta: '0', tone: 'neutral', forRoles: ['TELLER','CRED','AML'] },
+  { key: 'sla_breach', label: 'SLA 초과', value: 2, unit: '건', delta: '+1', tone: 'negative', forRoles: ['AUDITOR'] },
+];
+
+export const adminTrend = [
+  { m: '09:00', v: 1200 }, { m: '10:00', v: 2400 }, { m: '11:00', v: 3800 },
+  { m: '12:00', v: 2900 }, { m: '13:00', v: 3500 }, { m: '14:00', v: 4100 },
+];
+
+export const adminAlerts = [
+  { id: 1, time: '14:02', level: 'danger', text: 'FDS 차단 임계 초과 — 41건 (목표 35)', target: '/admin/credit' },
+  { id: 2, time: '13:51', level: 'warn', text: '신규 심사 케이스 5건 — 자동심사 부적합', target: '/admin/credit' },
+  { id: 3, time: '13:30', level: 'info', text: 'AML 매칭 9건 — AML 콘솔에서 검토', target: '/admin/credit' },
+  { id: 4, time: '13:14', level: 'warn', text: '연체 4단계 진입 후보 2건 — 결재 라우팅 필요', target: '/admin/delinquent' },
+  { id: 5, time: '12:55', level: 'info', text: '주간 SLA 보고서 자동 생성 완료', target: '/audit' },
+];
+
+const familyBlocked = ['홍길녀(자녀)','김영자(배우자)'];
+export const creditCases = Array.from({ length: 12 }, (_, i) => {
+  const auto = i % 4 === 0 ? '자동승인' : i % 4 === 1 ? '자동거절' : i % 4 === 2 ? '수동심사' : '보류';
+  const fb = i === 3 || i === 7;
+  return {
+    id: `C-2026-${String(1000 + i).padStart(4, '0')}`,
+    customer: fb ? familyBlocked[i % 2] : `고객${i + 1}`,
+    product: ['신용대출','주담대','전세','마이너스'][i % 4],
+    amount: (10_000_000 + i * 5_300_000),
+    receivedAt: `2026-05-${String(7 - (i % 5)).padStart(2, '0')}`,
+    urgency: ['긴급','일반','일반','일반'][i % 4],
+    autoResult: auto,
+    assignee: i % 5 === 0 ? null : `심사역${(i % 3) + 1}`,
+    family: fb,
+    css: 600 + (i * 17) % 200,
+  };
+});
+
+export const creditCaseDetail = {
+  id: 'C-2026-1003',
+  customer: '홍길동',
+  arc: false,
+  product: '신용대출',
+  amount: 50_000_000,
+  receivedAt: '2026-05-05',
+  income: 60_000_000,
+  job: '회사원',
+  career: '5년 3개월',
+  family: 2,
+  css: 720,
+  riskFlags: ['최근 6개월 신용카드 한도 80% 사용', '단기 차입 2건 보유'],
+  documents: [
+    { name: '재직증명서.pdf', size: '128KB', ok: true },
+    { name: '소득증명원.pdf', size: '92KB', ok: true },
+    { name: '주민등록등본.pdf', size: '54KB', ok: true },
+  ],
+  pattern: '입출금 정기성 양호 / 잔액 변동 안정',
+};
+
+export const delinquentCases = [
+  { id: 'D-001', stage: 1, customer: '고객A', principal: 15_000_000, interest: 250_000, days: 12,  recent: 'SMS', product: '신용대출' },
+  { id: 'D-002', stage: 1, customer: '고객B', principal: 8_500_000,  interest: 110_000, days: 18,  recent: '안내문', product: '신용대출' },
+  { id: 'D-003', stage: 2, customer: '고객C', principal: 32_000_000, interest: 720_000, days: 35,  recent: 'COLL_CALL', product: '주담대' },
+  { id: 'D-004', stage: 2, customer: '고객D', principal: 12_400_000, interest: 380_000, days: 41,  recent: 'COLL_CALL', product: '전세' },
+  { id: 'D-005', stage: 3, customer: '고객E', principal: 25_000_000, interest: 1_120_000, days: 67, recent: 'CIS', product: '신용대출' },
+  { id: 'D-006', stage: 3, customer: '고객F', principal: 90_000_000, interest: 4_300_000, days: 75, recent: 'CIS', product: '주담대' },
+  { id: 'D-007', stage: 4, customer: '고객G', principal: 120_000_000, interest: 6_400_000, days: 95, recent: '사전최고', product: '주담대' },
+  { id: 'D-008', stage: 4, customer: '고객H', principal: 48_000_000, interest: 2_100_000, days: 102, recent: '결재대기', product: '신용대출' },
+];

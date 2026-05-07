@@ -1,54 +1,76 @@
 import { useState } from 'react';
-import { auditLogSamples } from '../../data/mockData';
+import { adminKpis, adminTrend, adminAlerts, auditLogSamples } from '../../data/mockData';
+import KpiCard from '../../components/admin/KpiCard';
+import AlertFeed from '../../components/admin/AlertFeed';
+import MiniLineChart from '../../components/banking/MiniLineChart';
 import RiskBadge from '../../components/common/RiskBadge';
 import NetworkZoneBadge from '../../components/common/NetworkZoneBadge';
-import KinshipBlockedBadge from '../../components/compliance/KinshipBlockedBadge';
-import ApprovalChain from '../../components/compliance/ApprovalChain';
-import OtpModal from '../../components/modals/OtpModal';
-import ThreeStepAuthModal from '../../components/modals/ThreeStepAuthModal';
-import HumanReviewModal from '../../components/modals/HumanReviewModal';
-import UnmaskModal from '../../components/modals/UnmaskModal';
-import FdsBlockModal from '../../components/modals/FdsBlockModal';
-import AmlMatchModal from '../../components/modals/AmlMatchModal';
-import OcrFallbackModal from '../../components/modals/OcrFallbackModal';
+
+const ROLES = [
+  { key: 'TELLER',   label: '창구(TELLER)' },
+  { key: 'CRED',     label: '심사(CRED)' },
+  { key: 'AML',      label: '자금세탁방지(AML)' },
+  { key: 'AUDITOR',  label: '감사(AUDITOR)' },
+];
+const PERIODS = ['오늘', '7일', '30일'];
 
 export default function AdminDashboardPage() {
-  const [open, setOpen] = useState(null);
+  const [role, setRole] = useState('TELLER');
+  const [period, setPeriod] = useState('오늘');
+  const visible = adminKpis.filter((k) => k.forRoles.includes(role));
+
   return (
     <div className="col" style={{ gap: 16 }}>
       <div className="row" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
         <h1 style={{ margin: 0 }}>통합 대시보드</h1>
-        <NetworkZoneBadge zone="business" />
-      </div>
-
-      <div className="row">
-        <div className="card" style={{ flex: 1 }}>
-          <strong>📥 결재 미처리</strong>
-          <p style={{ fontSize: 28, fontWeight: 700, margin: '8px 0' }}>7</p>
-          <p className="muted">신규 4 · 보류 2 · 반려 1</p>
-        </div>
-        <div className="card" style={{ flex: 1 }}>
-          <strong>🛡 FDS 차단 (오늘)</strong>
-          <p style={{ fontSize: 28, fontWeight: 700, margin: '8px 0' }}>12</p>
-          <p className="muted">이상거래 자동 차단</p>
-        </div>
-        <div className="card" style={{ flex: 1 }}>
-          <strong>⚠️ AML 보류</strong>
-          <p style={{ fontSize: 28, fontWeight: 700, margin: '8px 0' }}>3</p>
-          <p className="muted">제재명단 부분 매칭</p>
+        <div className="row" style={{ alignItems: 'center', gap: 8 }}>
+          <NetworkZoneBadge zone="business" />
+          <span className="muted">권한:</span>
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
+            {ROLES.map((r) => <option key={r.key} value={r.key}>{r.label}</option>)}
+          </select>
+          <span className="muted">기간:</span>
+          <select value={period} onChange={(e) => setPeriod(e.target.value)}>
+            {PERIODS.map((p) => <option key={p}>{p}</option>)}
+          </select>
         </div>
       </div>
 
-      <div className="card">
-        <h2>결재 라인 (예시)</h2>
-        <ApprovalChain />
-        <div className="row" style={{ marginTop: 8 }}>
-          <KinshipBlockedBadge />
-          <span className="muted">— 친족 관계인 책임자는 자동 제외됩니다.</span>
-        </div>
-      </div>
+      <section className="row" style={{ flexWrap: 'wrap' }}>
+        {visible.map((k) => <KpiCard key={k.key} {...k} />)}
+      </section>
 
-      <div className="card">
+      <section className="row" style={{ alignItems: 'flex-start' }}>
+        <div className="card" style={{ flex: 2, minWidth: 320 }}>
+          <h2>실시간 거래 추이</h2>
+          <MiniLineChart series={adminTrend} width={460} height={100} />
+          <p className="muted">WebSocket push 갱신 (시연 — 정적). 임계 초과 시 자동 알림 → 우측 피드.</p>
+        </div>
+        <div className="card" style={{ flex: 1, minWidth: 280 }}>
+          <h2>에이전트 알림 피드</h2>
+          <AlertFeed alerts={adminAlerts} />
+        </div>
+      </section>
+
+      <section className="row">
+        <div className="card" style={{ flex: 1, minWidth: 240 }}>
+          <h2>심사 워크리스트 요약</h2>
+          <p>대기 47 · 자동승인 23 · 자동거절 9 · 수동심사 15</p>
+          <a href="/admin/credit"><button>심사 콘솔로</button></a>
+        </div>
+        <div className="card" style={{ flex: 1, minWidth: 240 }}>
+          <h2>연체 워크리스트 요약</h2>
+          <p>1단계 12 · 2단계 8 · 3단계 4 · 4단계 2</p>
+          <a href="/admin/delinquent"><button>연체 콘솔로</button></a>
+        </div>
+        <div className="card" style={{ flex: 1, minWidth: 240 }}>
+          <h2>결재 미처리</h2>
+          <p style={{ fontSize: 28, fontWeight: 700 }}>7</p>
+          <a href="/admin/approvals"><button>결재함</button></a>
+        </div>
+      </section>
+
+      <section className="card">
         <h2>최근 감사로그 (서버 권위)</h2>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
           <thead>
@@ -68,28 +90,7 @@ export default function AdminDashboardPage() {
             ))}
           </tbody>
         </table>
-      </div>
-
-      <div className="card">
-        <h2>업무 모달 시연</h2>
-        <div className="demo-grid">
-          <button onClick={() => setOpen('otp')}>OTP (L2)</button>
-          <button onClick={() => setOpen('3step')}>3단계 인증 (L3)</button>
-          <button onClick={() => setOpen('human')}>사람 검토 요청 (L4)</button>
-          <button onClick={() => setOpen('unmask')}>마스킹 풀기</button>
-          <button onClick={() => setOpen('fds')}>FDS 차단 안내</button>
-          <button onClick={() => setOpen('aml')}>AML 매칭 안내</button>
-          <button onClick={() => setOpen('ocr')}>OCR 실패 폴백</button>
-        </div>
-      </div>
-
-      <OtpModal open={open === 'otp'} onClose={() => setOpen(null)} onVerify={() => setOpen(null)} />
-      <ThreeStepAuthModal open={open === '3step'} onClose={() => setOpen(null)} onVerify={() => setOpen(null)} />
-      <HumanReviewModal open={open === 'human'} onClose={() => setOpen(null)} onSubmit={() => setOpen(null)} />
-      <UnmaskModal open={open === 'unmask'} onClose={() => setOpen(null)} />
-      <FdsBlockModal open={open === 'fds'} onClose={() => setOpen(null)} onContact={() => setOpen(null)} />
-      <AmlMatchModal open={open === 'aml'} onClose={() => setOpen(null)} />
-      <OcrFallbackModal open={open === 'ocr'} onClose={() => setOpen(null)} onVideo={() => setOpen(null)} onVisit={() => setOpen(null)} />
+      </section>
     </div>
   );
 }
